@@ -1,0 +1,73 @@
+/* style.css */
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #222;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#game-container {
+    width: 80%;
+    max-width: 800px;
+    background-color: #333;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+    overflow: hidden;
+}
+
+#log-screen {
+    height: 400px;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+#text-display {
+    white-space: pre-wrap;
+}
+
+#next-button {
+    width: 100%;
+    padding: 15px;
+    background-color: #444;
+    color: #fff;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+#next-button:hover {
+    background-color: #555;
+}
+
+/* キャラごとの色設定 */
+.char-ag {
+    color: #78c5ef;
+}
+
+.char-fos {
+    color: #f39c12;
+}
+
+.char-elena {
+    color: #e74c3c;
+}
+
+/* テキスト表示のアニメーション効果 */
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
