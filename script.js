@@ -1,7 +1,7 @@
 // キャラクターごとのフォントとSE設定
 const characterSettings = {
     "AG": { font: "Arial", se: "se/AG.mp3" },
-    "フォス": { font: "Georgia", se: "se/フォス.mp3" },
+    "フォス": { font: "Zen Kurenaido", serif": "se/フォス.mp3" }
     "エレーナ": { font: "Comic Sans MS", se: "se/エレーナ.mp3" }
 };
 
