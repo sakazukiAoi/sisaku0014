@@ -18,7 +18,7 @@ function loadTextFile() {
                 const text = e.target.result;
                 textData = processTextData(text);
                 currentIndex = 0;
-                alert('テキストがロードされました。次へボタンを押して表示してください。');
+//                alert('テキストがロードされました。次へボタンを押して表示してください。');
             };
             reader.readAsText(file);
         }
