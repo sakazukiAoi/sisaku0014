@@ -1,26 +1,41 @@
-// script.js
+// キャラクターごとのフォントとSE設定
+const characterSettings = {
+    "AG": { font: "Arial", se: "se/AG.mp3" },
+    "フォス": { font: "Georgia", se: "se/フォス.mp3" },
+    "エレーナ": { font: "Comic Sans MS", se: "se/エレーナ.mp3" }
+};
 
 // 外部テキストファイルを読み込み
-async function loadTextFile(url) {
-    const response = await fetch(url);
-    return await response.text();
+function loadTextFile() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.txt';
+    input.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const text = e.target.result;
+                textData = processTextData(text);
+                currentIndex = 0; // 初期化
+                alert('テキストがロードされました。次へボタンを押して表示してください。');
+            };
+            reader.readAsText(file);
+        }
+    });
+    input.click();
 }
 
 // テキストデータの処理
 function processTextData(text) {
-    return text.split('\\n').map(line => {
-        if (!line.includes(':')) return null; // 不正な行を無視
-        const [character, dialogue] = line.split(':');
-        return { character: character.trim(), dialogue: dialogue.trim() };
-    }).filter(line => line); // 無効な行を除外
+    return text.split(/\r?\n/).map(line => {
+        const colonIndex = line.indexOf(':');
+        if (colonIndex === -1) return line.trim(); // ナレーション行
+        const character = line.slice(0, colonIndex).trim();
+        const dialogue = line.slice(colonIndex + 1).trim();
+        return { character, dialogue };
+    });
 }
-
-// キャラクターごとの設定
-const characterSettings = {
-    'AG': { className: 'char-ag', se: 'se_ag.mp3' },
-    'フォス': { className: 'char-fos', se: 'se_fos.mp3' },
-    'エレーナ': { className: 'char-elena', se: 'se_elena.mp3' }
-};
 
 // テキストを表示する要素とボタン
 const textDisplay = document.getElementById('text-display');
@@ -32,33 +47,42 @@ let currentIndex = 0;
 
 // 次のテキストを表示
 function displayNextText() {
+    if (textData.length === 0) {
+        loadTextFile(); // 初回クリック時にファイル選択ダイアログを表示
+        return;
+    }
+
     if (currentIndex >= textData.length) return;
 
-    const { character, dialogue } = textData[currentIndex];
-    const charSetting = characterSettings[character] || {};
-
+    const currentLine = textData[currentIndex];
     const textElement = document.createElement('p');
-    textElement.textContent = `${character}: ${dialogue}`;
-    textElement.className = charSetting.className || '';
-    textElement.classList.add('fade-in');
 
+    if (typeof currentLine === 'string') {
+        // ナレーション行
+        textElement.textContent = currentLine;
+        textElement.style.fontFamily = "Serif";
+    } else {
+        // キャラ名とセリフ
+        const { character, dialogue } = currentLine;
+        textElement.textContent = `${character}: ${dialogue}`;
+
+        // フォントを設定
+        if (characterSettings[character]) {
+            textElement.style.fontFamily = characterSettings[character].font;
+
+            // SEを再生
+            const audio = new Audio(characterSettings[character].se);
+            audio.play();
+        }
+    }
+
+    textElement.classList.add('fade-in');
     textDisplay.appendChild(textElement);
     textDisplay.scrollTop = textDisplay.scrollHeight;
 
-    // SEを再生
-    if (charSetting.se) {
-        const audio = new Audio(charSetting.se);
-        audio.play();
-    }
-
+    // 次の行へ進む
     currentIndex++;
 }
 
 // イベントリスナー
 nextButton.addEventListener('click', displayNextText);
-
-// 初期化
-loadTextFile('text.txt').then(text => {
-    textData = processTextData(text);
-    displayNextText();
-});
