@@ -52,7 +52,11 @@ function displayNextText() {
         return;
     }
 
-    if (currentIndex >= textData.length) return;
+    // リセット処理
+    if (currentIndex >= textData.length) {
+        resetDisplay();
+        return;
+    }
 
     const currentLine = textData[currentIndex];
     const textElement = document.createElement('p');
@@ -82,6 +86,13 @@ function displayNextText() {
 
     // 次の行へ進む
     currentIndex++;
+}
+
+// リセット処理
+function resetDisplay() {
+    textDisplay.innerHTML = '';
+    currentIndex = 0;
+    alert('最初から始めます。次へボタンを押してください。');
 }
 
 // イベントリスナー
