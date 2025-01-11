@@ -8,10 +8,11 @@ async function loadTextFile(url) {
 
 // テキストデータの処理
 function processTextData(text) {
-    return text.split('\n').map(line => {
+    return text.split('\\n').map(line => {
+        if (!line.includes(':')) return null; // 不正な行を無視
         const [character, dialogue] = line.split(':');
         return { character: character.trim(), dialogue: dialogue.trim() };
-    });
+    }).filter(line => line); // 無効な行を除外
 }
 
 // キャラクターごとの設定
