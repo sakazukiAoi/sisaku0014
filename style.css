@@ -45,17 +45,29 @@ body {
     background-color: #555;
 }
 
-/* キャラごとの色設定 */
+/* キャラごとの色、フォント、SE設定 */
 .char-ag {
     color: #78c5ef;
+    font-family: 'Courier New', monospace;
+}
+.char-ag::before {
+    content: url('se_ag.mp3');
 }
 
 .char-fos {
     color: #f39c12;
+    font-family: 'Georgia', serif;
+}
+.char-fos::before {
+    content: url('se_fos.mp3');
 }
 
 .char-elena {
     color: #e74c3c;
+    font-family: 'Comic Sans MS', cursive;
+}
+.char-elena::before {
+    content: url('se_elena.mp3');
 }
 
 /* テキスト表示のアニメーション効果 */
