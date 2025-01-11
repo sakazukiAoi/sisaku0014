@@ -1,4 +1,5 @@
 
+
 // キャラクターごとのフォントとSE設定
 const characterSettings = {
     "AG": { font: "'Zen Maru Gothic', serif", se: "se/AG.mp3" },
@@ -22,6 +23,7 @@ function loadTextFile() {
                 const text = e.target.result;
                 textData = processTextData(text);
                 currentIndex = 0;
+                displayNextText();
             };
             reader.readAsText(file);
         }
@@ -32,11 +34,11 @@ function loadTextFile() {
 // テキストデータの処理
 function processTextData(text) {
     return text.split(/\r?\n/).flatMap(line => {
-        if (line.trim() === "") return [];
+        if (line.trim() === "") return []; // 空行は無視
 
         const colonIndex = line.indexOf(':');
         if (colonIndex === -1) {
-            return line.split(/\n/).map(narrationLine => ({ character: "ナレーション", dialogue: narrationLine.trim() }));
+            return line.split(/\n/).map(narrationLine => ({ character: "", dialogue: narrationLine.trim() }));
         }
 
         const character = line.slice(0, colonIndex).trim();
@@ -45,31 +47,14 @@ function processTextData(text) {
     });
 }
 
-// テキスト表示処理の部分を変更
-function displayLine(lineData) {
-    const textArea = document.getElementById("text-display");
-    const nameArea = document.getElementById("name-display");
-
-    if (lineData.character === "ナレーション") {
-        nameArea.textContent = "";
-        displayTextOneCharAtATime(lineData.dialogue);
-    } else {
-        nameArea.textContent = lineData.character;
-        displayTextOneCharAtATime(lineData.dialogue);
-    }
-}
-
-// テキストを表示する要素とボタン
+// 次のテキストを1文字ずつ表示
 const textDisplay = document.getElementById('text-display');
 const nextButton = document.getElementById('next-button');
-
-// テキスト表示用の変数
 let textData = [];
 let currentIndex = 0;
 let charIndex = 0;
 let isDisplayingText = false;
 
-// 次のテキストを1文字ずつ表示
 function displayNextText() {
     if (isDisplayingText) return;
 
@@ -84,63 +69,57 @@ function displayNextText() {
     }
 
     const currentLine = textData[currentIndex];
+
+    // 既存のテキストエリアに新しい行を追加
     const textElement = document.createElement('p');
-    textElement.style.fontFamily = characterSettings[currentLine.character]?.font || "Serif";
+    textElement.style.fontFamily = characterSettings[currentLine.character]?.font || "serif";
 
-    let character = '';
-    let dialogue = '';
+    let { character, dialogue } = currentLine;
 
-    if (typeof currentLine === 'string') {
-        dialogue = currentLine;
-        playNarrationSE();
-    } else {
-        ({ character, dialogue } = currentLine);
+    if (character) {
         textElement.textContent = `${character}: `;
     }
 
     textDisplay.appendChild(textElement);
+
     charIndex = 0;
     isDisplayingText = true;
 
     // 1文字ずつ表示
     function showNextChar() {
         if (charIndex < dialogue.length) {
-            const char = dialogue[charIndex];
-            textElement.textContent += char;
+            textElement.textContent += dialogue[charIndex];
             charIndex++;
 
-            // 5文字ごとにSEを再生
-            if (charIndex % 5 === 0) {
+            // 7文字ごとにSEを再生
+            if (charIndex % 7 === 0) {
                 playCharacterSE(character);
             }
 
-            // 「、」「。」の後に少し間を空ける
-            if (char === "、" || char === "。") {
-                clearTimeout(textInterval);
-                setTimeout(showNextChar, 300); // 300msの間を空ける
-            } else {
-                textInterval = setTimeout(showNextChar, 50);
-            }
+            // 句読点で少し間を開ける
+            const delay = "、。！？….".includes(dialogue[charIndex - 1]) ? 300 : 50;
+            setTimeout(showNextChar, delay);
         } else {
             currentIndex++;
             isDisplayingText = false;
         }
     }
 
-    let textInterval = setTimeout(showNextChar, 50);
+    showNextChar();
+
+    // 自動スクロール
+    textDisplay.scrollTop = textDisplay.scrollHeight;
 }
 
 // 効果音を再生
 function playCharacterSE(character) {
-    if (character && characterSettings[character]) {
+    if (!character) {
+        const audio = new Audio(narrationSE);
+        audio.play();
+    } else if (characterSettings[character]?.se) {
         const audio = new Audio(characterSettings[character].se);
         audio.play();
     }
-}
-
-function playNarrationSE() {
-    const audio = new Audio(narrationSE);
-    audio.play();
 }
 
 // リセット処理の選択肢を表示
