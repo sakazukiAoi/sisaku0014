@@ -1,36 +1,63 @@
-
 /* 基本のリセット */
 body, html {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Zen Maru Gothic', sans-serif;
-    height: 60%;
+    height: 100%;
 }
-.text-area {
-    height: 400px;
+
+/* ページ全体のレイアウト */
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* テキスト表示エリアのスタイル */
+#text-display {
+    flex-grow: 1;
+    max-height: 70vh;  /* 画面の70%を最大高さに指定 */
+    padding: 20px;
+    background-color: #f9f9f9;
     border: 1px solid #ccc;
-    padding: 15px;
-    background-color: #fff;
-    min-height: 150px;
-    font-size: 1em;
-    line-height: 1.5;
-    max-height: 70vh;
+    border-radius: 10px;
+    overflow-y: auto;
+    margin: 6px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    white-space: pre-wrap;  /* 改行を適切に反映 */
 }
 
-
-/* ボタンのスタイル*/
+/* 次へボタンのスタイル */
 #next-button {
+    position: fixed;
+    bottom: 0;
+    left: 0;
     width: 100%;
-    padding: 15px;
+    padding: 50px;
     font-size: 1.2rem;
-    border: none;
-    border-radius: 8px;
     background-color: #007BFF;
     color: white;
+    border: none;
     cursor: pointer;
+    border-radius: 0 0 8px 8px;
+    border-top: 1px solid #ccc;
 }
- 
+
+/* 次へボタンのホバー時のスタイル */
 #next-button:hover {
     background-color: #0056b3;
+}
+
+/* スマホ画面対応 */
+@media (max-width: 600px) {
+    #text-display {
+        max-height: 70vh;  /* スマホでは70%を少し小さめに調整 */
+        margin: 2px;
+    }
+
+    #next-button {
+        font-size: 1rem;
+        padding: 30px;
+    }
 }
