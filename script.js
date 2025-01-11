@@ -1,10 +1,11 @@
-
-
 // キャラクターごとのフォントとSE設定
 const characterSettings = {
-    "AG": { font: "'Zen Maru Gothic', serif", se: "se/AG.mp3" },
-    "フォス": { font: "'Zen Kurenaido', serif", se: "se/フォス.mp3" },
-    "エレーナ": { font: "'Kiwi Maru', serif", se: "se/エレーナ.mp3" }
+    "AG": { font: "'Zen Maru Gothic', serif", se: "se/narration.mp3" },
+    "フォス": { font: "'Zen Kurenaido', serif", se: "se/エレーナ.mp3" },
+    "エレーナ": { font: "'Kiwi Maru', serif", se: "se/エレーナ.mp3" },
+    "美津": { font: "'Zen Kurenaido', serif", se: "se/narration.mp3" },
+    "友人": { font: "'Zen Kurenaido', serif", se: "se/narration.mp3" },
+    "零奈": { font: "'Zen Kurenaido', serif", se: "se/narration.mp3" },
 };
 
 // ナレーション時の効果音設定
@@ -92,7 +93,7 @@ function displayNextText() {
             charIndex++;
 
             // 7文字ごとにSEを再生
-            if (charIndex % 7 === 0) {
+            if (charIndex === 1 || charIndex % 7 === 0) {
                 playCharacterSE(character);
             }
 
@@ -124,7 +125,7 @@ function playCharacterSE(character) {
 
 // リセット処理の選択肢を表示
 function showResetOptions() {
-    const choice = confirm('最初から始めますか？「キャンセル」を選択すると、別のテキストを読み込みます。');
+    const choice = confirm('最初から始めますか？キャンセルを選択すると、別のテキストを読み込みます。');
     if (choice) {
         resetDisplay();
     } else {
